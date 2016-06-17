@@ -1,0 +1,12 @@
+answer
+call
+call echo@iptel.org
+conference add
+conference rm
+pause
+playbackgain-2.5
+quit
+resume
+terminate
+============================================================
+***History Starts Below***

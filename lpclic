@@ -1,0 +1,304 @@
+#!/bin/bash
+## lpclic, by B.H.
+## LPCLIC is an attempt at making linphonec more tidy and user-friendly
+## by optimizing the linphonec_history file.
+## Backs up all called numbers, removes unwanted duplicate entries
+## and many typos, etc.
+## LPC rebuilds command history in to three sections; a favorite commands list
+## at the top where the user can always find the commands she uses most,
+## an alphabetized historyof all commands that can optionally be trimmed 
+## to a given size, and a short list of commands at the bottom 
+## where the last typed is the first to be focused when linphonec is started. 
+
+## Initial variables and such
+Udir="$HOME/.lpc"
+Uconf="${Udir}/lpc.conf"
+
+## Some functions
+## Backup .conf file when making changes/left over from before sed backup was used
+CONFBK() {
+cp $Uconf ${Uconf}.bak
+}
+
+## User configuration function
+LPCCONF() {
+## Internal show options list function
+SHOWSET() {
+echo ""
+echo "    *Configuration Menu*"
+echo '1) LPC-editor
+2) Favorites-to-use
+3) Append-last-used
+4) Command-list-length
+5) Start-command
+6) Close-menu
+7) Quit'
+}
+
+echo "    *Configuration Menu*"
+SETTINGS='LPC-editor Favorites-to-use Append-last-used Command-list-length Start-command Close-menu Quit'
+PS3='Type a number to select an option...Quit when you are done.
+'
+select SETTING in $SETTINGS
+do
+if [ $SETTING == Close-menu ]; then
+READCONF
+break
+fi
+if [ $SETTING == LPC-editor ]; then
+echo "LPCLIC is using $LPCED to edit files" 
+read -p "Press enter to keep $LPCED as lpclic\'s editor, or
+type the name of the editor you want lpclic to use.
+" TMPED
+if [[ -n "$TMPED" ]]; then
+sed -i.bak "s/^LPCED=.*/LPCED=$TMPED/" $Uconf
+echo "$TMPED is now lpcli's editor."
+SHOWSET
+else
+echo "OK, you have kept $LPCED as the lpclic editor."
+SHOWSET
+fi
+fi
+
+if [ $SETTING == Favorites-to-use ]; then
+echo "Your favorite commands areread from $dfFAVS."
+read -p "Press enter to continue using $dfFAVS as your default favorites file,
+or type the name of the file you want to use.
+" TMPFAVS
+if [[ -n "$TMPFAVS" ]]; then
+sed -i.bak "s/^dfFAVS=.*/dfFAVS=$TMPFAVS/" $Uconf
+echo "$TMPFAVS is now your default favorites file."
+SHOWSET
+else
+echo "OK, you have kept $dfFAVS as your default favorites file."
+SHOWSET
+fi
+fi 
+
+if [ $SETTING == Append-last-used ]; then
+echo "
+Do you want to append most recent 10 commands on to your linphonec_history?
+## 0 is no, 1 calls only, (not including friend call commands), 2 yes."
+echo "The current append value is ${cmdAPPEND}." 
+read -p "Press enter to keep $cmdAPPEMD as the append value, or
+type a new value to use.
+" TMPAPPEND
+if [[ -n "$TMPAPPEND" ]]; then
+sed -i.bak "s/^cmdAPPEND=.*/cmdAPPEND=$TMPAPPEND/" $Uconf
+echo "$TMPAPPEND is now the append value."
+SHOWSET
+else
+echo "OK, you have kept $cmdAPPEND as the command append value."
+SHOWSET
+fi
+fi
+
+if [ $SETTING == Start-command ]; then
+echo "Your start command is $LPEXEC."
+read -p "Press enter to keep $LPEXEC for your start command,
+or type the command you want to start linphone with.
+" TMPEXEC
+if [[ -n "$TMPEXEC" ]]; then
+sed -i.bak "s/^LPEXEC=.*/LPEXEC=\'$TMPEXEC\'/" $Uconf
+echo "$TMPEXEC is now your start command."
+SHOWSET
+else
+echo "OK, you have kept $LPEXEC your start command."
+SHOWSET
+fi
+fi 
+
+if [ $SETTING == Command-list-length ]; then
+echo "This functionality is not implemented yet. For now manually edit
+ ~/.linphonec_history. The Command-list-length control should be ready soon.
+*Please check for updates regularly."
+SHOWSET
+fi
+
+if [ $SETTING == Quit ]; then
+echo "Exiting LPCLIC Now"
+exit 0
+fi
+done
+}
+
+## Setup and configuration function
+LPCSET() {
+## Display options when needed
+SHOWOPT() {
+echo ""
+echo "    *Main Menu*"
+echo '1) Configure-lpclic
+2) Edit-favorite-commands
+3) Edit-linphonec_history
+4) Launch-Linphone
+5) Quit'
+}
+
+echo "    *Main Menu*"
+OPTS='Configure-lpclic Edit-favorite-commands Edit-linphonec_history Launch-Linphone Quit'
+PS3='Type a number to select an option...,Quit when you are done.
+'
+select OPT in $OPTS
+do
+if [[ $OPT == Quit ]]; then
+echo 'Exiting LPCLIC Now'
+break
+fi
+if [[ $OPT == Edit-favorite-commands ]]; then
+echo "You chose to $OPT"
+$LPCED ${Udir}/lpc_favorites
+SHOWOPT
+fi
+if [[ $OPT == Edit-linphonec_history ]]; then
+echo "You chose to $OPT"
+$LPCED ~/.linphonec_history
+SHOWOPT
+fi
+if [[ $OPT == Configure-lpclic ]]; then
+echo ""
+LPCCONF
+SHOWOPT
+fi
+if [ $OPT == Launch-Linphone ]; then
+BKC && echo "Calls history backed-up to ${Udir}/call_hist"
+OPTHIST && echo "Launching Linphone with your rebuilt $HOME/.linphonec_history file"
+exec $LPEXEC
+fi
+done
+exit 0
+}
+
+## Read configuration function
+READCONF() {
+if [ -f "/etc/lpc/lpc.conf" ]; then
+. /etc/lpc/lpc.conf
+fi
+if [ -f $Uconf ]; then 
+. $Uconf
+fi
+if [ -f "$Ecfg" ]; then
+. $Ecfg
+fi
+}
+
+## Call history backup function
+BKC() {
+sed '/^call /!d' ~/.linphonec_history|sort|uniq > ~/.lpc/call_hist
+}
+
+## History cleanup function
+OPTHIST() {
+## Check size of ~/.linphonec_favorites
+FAVCOUNT=$(wc -l $dfFAVS | sed 's/[^0-9]//g')
+let FAVCOUNT="$FAVCOUNT"+1
+## Save commands to be appended to history if $cmdAPPEND is enabled
+HISTCOUNT=$(wc -l ~/.linphonec_history|sed 's/[^0-9]//g')
+echo "$HISTCOUNT" >> /tmp/lpc-test
+let HISTCOUNT="$HISTCOUNT"-"$FAVCOUNT"
+echo "$HISTCOUNT $cmdAPPEND" >> /tmp/lpc-test
+if [[ $HISTCOUNT -ge 10 ]]; then
+if [[ $cmdAPPEND -eq 1 ]]; then
+sed -n '/^call .*/p' ~/.linphonec_history|uniq|tail > ~/.lpc/tmp_append
+elif [[ $cmdAPPEND -eq 2 ]]; then
+uniq|tail ~/.linphonec_history > ~/.lpc/tmp_append
+fi
+else
+echo 'Your ~/.linphonec_history file is too short to process last used items
+for appending to sorted command history if if command appending is enabled.' 
+fi 
+## Rebuild history
+tail -n +"$FAVCOUNT" ~/.linphonec_history|sort|uniq > ~/.lpc/tmp_his
+cp $dfFAVS ~/.linphonec_history
+sed 's/[^a-zA-Z0-9 @,:.#*]//g; s/^ *//; s/ *$//; s/^.$//; s/^..$//; /^\s*$/d' ~/.lpc/tmp_his >> ~/.linphonec_history
+## Append last used if enabled
+if [[ $cmdAPPEND -ne 0 ]] && [ -f ~/.lpc/tmp_append ]; then
+cat ${Udir}/tmp_append >> ~/.linphonec_history
+fi
+exit=0
+}
+
+## Things should start working from here...
+
+## Check for user's lpc dir and create one if needed
+if ! [ -d ~/.lpc ]; then
+mkdir -p "$Udir"
+cp /etc/lpc/lpc.conf $Uconf
+cp /etc/lpc/lpc_favorites ~/.lpc/lpc_favorites
+echo "Personal lpc configuration and favorite commands files have been created for you.
+Your lpc files are  found in ~/.lpc/ and system defaults are in /etc/lpc."
+## Set initial configuration
+READCONF
+## Setup and ustomize 
+LPCSET
+## Build first optimized history file
+cp ~/.linphonec_history ~/.linphonec_history.bak && \
+echo "Your old command history file has been copied to ~/.linphonec_history.bak."
+cp $dfFAVS > /tmp/lpclic_hist
+cat ~/.linphonec_history >> /tmp/lpclic_hist
+cp /tmp/lpclic_hist ~/.linphonec_history
+echo '
+A new linphonec_history file has been made for you
+with favorite commands at the top.
+You must now let lpclic launch linphone, or rerun lpclic with the -p option
+ to complete the processing/optimization of your command history.'
+fi
+
+## Read lpc settings 
+READCONF
+
+while getopts :cf:hmps CLO; do
+case $CLO in
+c)
+LPCCONF
+;;
+f)
+if ! [ -f $OPTARG ]; then
+echo "You must enter the name of a valid lpc.conf file with the -f option."
+exit 3
+elif ! [ -f $OPTARG ]; then
+echo "$OPTARG does not exist. Create a new lpc.conf file, or
+enter the correct path/filename for an existing lpc.conf." 
+else
+Ecfg="$OPTARG"
+echo " your configuration will be read from $OPTARG"
+. $Ecfg
+fi
+;;
+h)
+echo 'Typing lpclic opens linphonec   after optimizing its command history.
+
+     *Options:
+-c   Configure user specific lpclic options
+-f   Fileto read configuration from: file must already exist
+-h   Helpful message: this dribble to remind you of available options
+-m   Main menu: includes options to edit commands, lpclic config, etc.
+-p   Process command history with outlaunching linphone
+-s   Start linphone using your default command with out preprocessing command history
+
+Type man lpclic for more information.'
+exit 0
+;;
+m)
+echo "         Welcome to LPCLIC"
+LPCSET
+;;
+p)
+BKC
+OPTHIST
+exit 0
+;;
+s)
+exec $LPEXEC
+;;
+?)
+echo "You entered an invalid option. Try again, or type lpc  -h for help."
+exit 1
+;;
+esac
+done
+
+BKC
+OPTHIST
+exec $LPEXEC
+exit=0

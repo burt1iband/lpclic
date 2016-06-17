@@ -1,0 +1,38 @@
+# lpclic
+a script to optimize command history presentation and otherwise make the linphonec CLI for linphone more usable
+
+LPCLIC is designed to make the use of the linphonec CLI for linphone more efficient by optimizing its history file.
+This is accomplished by removing duplicate entries, some common typos and very short command strings more easily retyped in 
+most cases than located in a long command history list. There will also be the option to limit the number of commands in the history.
+This basic cleanup was my original goal when I started work on LPC, and a few sed expressions did most of the heavy lifting along with an alphabetical 
+sorting that both assisted under the hood and helped the user find a command quickly. After using a couple of variations of this original script for a 
+while I realized that I mostly used a small set of commands which led to me creating a favorite command list that would always appear at the top of the 
+history and might be lost if I kept the list to a certain length. 
+The other thing I found out one day when something went wrong is that it's helpful to have a list of numbers that one has called, perhaps a number is 
+typed in to linphonec but never written anywhere else. It's almost always faster and easier to look locally than online in my VOIP service's records, and 
+some services make it harder than mine which has a rather well organized website.
+Finally actually having the last few commands used at the end of the history is often helpful, and the clean-up had done away with that, so that got 
+added as an option. 
+Now hopefully most users will find they have most of the benefit of a standard linphonec command history, but with out having an unwieldly mess that 
+grows indefinitely unless they clean it up by hand.
+In the future I hope to improve the detection/removal of typographical errors, and perhaps add functionality to change some options in the main linponerc 
+file, but most of the additional functionality I have thought
+of should be integrated in to linphonec itself, and/or handled in a way that both linphone's GUI and linphonec  could get at it.
+Actually most of what I've already done should bebuilt in to linphonec, at the very least a way to  limit total hist file size           
+
+Installation:
+Just extract the tarball and run the install-lpclic.sh script if there is not a package available in a repo for your distro.
+
+Usage:
+The first time the user starts lpc a configuration file is put in to ~/.lpc/ and they are offered the chance to edit their favorites file as well as 
+manually edit ~/.linphonec_history. 
+The lpc.conf file is commented enough  to guide most users through available settings I hope, but all settings can be changed from the lpclic menus. 
+See the lpc manpage  for more information.
+
+Bugs:
+I don't know of any bugs in lpclic perce, but it is not completely idiot proof, so you will not be warned if you configure  an lpclic editor that is not 
+installed on your system or that has not been written yet, or enter a non-existent linphonec start command.
+Sanity checks will likely be added.
+As has been stated above there is still work to do when it comes to cleaning up typos.  Remember you can put anything in to your favorites file and it 
+will not be cleaned up so you can have one or two number strings there for instance that would be removed from the command history, but you can also have 
+illegal commands, wrong numbers and such there that will persist until you remove them by hand.     

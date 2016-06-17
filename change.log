@@ -1,0 +1,32 @@
+Change Log for lpc, a cleanup and optimization script for linphonec_historyx
+
+0.1.0: winter 2014-2015- Sed based scripts used to cleanup linphonec history file
+Called number script backed up all called numbers, SIP handles and other call commands. 
+
+0.2.0: 07/07/2015- Combined a simple cleanup script with a called numbers backup script.
+     Added ability to auto detect changes in favorites file.
+     User's lpc files are now in ~/.lpc instead of loose in $HOME.
+     Systemwide and user specific config files allow  for customization.
+0.3.0: 15/09/2015- Menus added to guide the user through lpclic configuration changes and open history files for manual editing.
+
+0.3.1: 07/12/2015- Option to append last used commands on to cleanedup history is added.
+Configuration menu is mostly finished.
+
+0.4.0: 15/06/2016- Menus are finished and tested except for history length limit which which now sends an under development message.
+Help is changed from a place holder msg to a hopefully useful explanation of available options.
+First time run now does not lose oldest commands in ~/.linphonec_history when building initial optimized history file.
+Configuration files are now sourced so that options missing in a user's lpc.conf file wil be read from the system lpc.conf.
+Menus are now displayed in a more readable manner with input and output on separate lines, menu titles and some blank line separation
+where appropriate.
+Status messages are added to inform the user of some actions taken.
+
+0.4.0.1: 16/06/2016- Consecutive duplicate commands are removed from last used before appending to history file 
+
+
+ToDo- Finish hist length limit function.
+Improve history cleanup to catch more typos and cases where a command is typed on a line wher a command already exists.
+Consider adding some functionality to change global linphone configuratioin by automating some edits to linphonerc.
+Posibly add an option to append favorites on to cleanedup history instead of prepending it.
+Add a commandline option to start linphonec with favorites and/or last called only for users who normally keep their whole command history.
+Port menus to ncurses so that items can be selected with out typing numbers.
+Eventually look at integration of features in to linphonec itself.
