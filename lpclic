@@ -11,7 +11,7 @@
 ## where the last typed is the first to be focused when linphonec is started. 
 
 ## Initial variables and such
-Udir="$HOME/.lpc"
+Udir="$HOME/.lpclic"
 Uconf="${Udir}/lpc.conf"
 
 ## Some functions
@@ -199,9 +199,9 @@ let HISTCOUNT="$HISTCOUNT"-"$FAVCOUNT"
 echo "$HISTCOUNT $cmdAPPEND" >> /tmp/lpc-test
 if [[ $HISTCOUNT -ge 10 ]]; then
 if [[ $cmdAPPEND -eq 1 ]]; then
-sed -n '/^call .*/p' ~/.linphonec_history|uniq|tail > ~/.lpc/tmp_append
+sed -n '/^call .*/p' ~/.linphonec_history|uniq|tail > ${Udir}/tmp_append
 elif [[ $cmdAPPEND -eq 2 ]]; then
-uniq|tail ~/.linphonec_history > ~/.lpc/tmp_append
+uniq|tail ~/.linphonec_history > ${Udir}/tmp_append
 fi
 else
 echo 'Your ~/.linphonec_history file is too short to process last used items
@@ -221,19 +221,18 @@ exit=0
 ## Things should start working from here...
 
 ## Check for user's lpc dir and create one if needed
-if ! [ -d ~/.lpc ]; then
+if ! [ -d "${HOME}/.lpclic" ]; then
 mkdir -p "$Udir"
 cp /etc/lpc/lpc.conf $Uconf
-cp /etc/lpc/lpc_favorites ~/.lpc/lpc_favorites
+cp /etc/lpclic/lpc_favorites ${Udir}
 echo "Personal lpc configuration and favorite commands files have been created for you.
-Your lpc files are  found in ~/.lpc/ and system defaults are in /etc/lpc."
+Your lpc files are  found in ~/.lpclic/ and system defaults are in /etc/lpclic/."
+cp ${HOME}/.linphonec_history ${HOME}/.linphonec_history.bak && echo "Your old command history file has been copied to ${HOME}/.linphonec_history.bak."
 ## Set initial configuration
 READCONF
 ## Setup and ustomize 
 LPCSET
 ## Build first optimized history file
-cp ~/.linphonec_history ~/.linphonec_history.bak && \
-echo "Your old command history file has been copied to ~/.linphonec_history.bak."
 cp $dfFAVS > /tmp/lpclic_hist
 cat ~/.linphonec_history >> /tmp/lpclic_hist
 cp /tmp/lpclic_hist ~/.linphonec_history
