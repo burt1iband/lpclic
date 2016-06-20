@@ -184,7 +184,7 @@ fi
 
 ## Call history backup function
 BKC() {
-sed '/^call /!d' ~/.linphonec_history|sort|uniq > ~/.lpc/call_hist
+sed '/^call /!d' ~/.linphonec_history|sort|uniq > ${Udir}/call_hist
 }
 
 ## History cleanup function
@@ -208,11 +208,11 @@ echo 'Your ~/.linphonec_history file is too short to process last used items
 for appending to sorted command history if if command appending is enabled.' 
 fi 
 ## Rebuild history
-tail -n +"$FAVCOUNT" ~/.linphonec_history|sort|uniq > ~/.lpc/tmp_his
+tail -n +"$FAVCOUNT" ~/.linphonec_history|sort|uniq > ${Udir}/tmp_his
 cp $dfFAVS ~/.linphonec_history
-sed 's/[^a-zA-Z0-9 @,:.#*]//g; s/^ *//; s/ *$//; s/^.$//; s/^..$//; /^\s*$/d' ~/.lpc/tmp_his >> ~/.linphonec_history
+sed 's/[^a-zA-Z0-9 @,:.#*]//g; s/^ *//; s/ *$//; s/^.$//; s/^..$//; /^\s*$/d' ${Udir}/tmp_his >> ~/.linphonec_history
 ## Append last used if enabled
-if [[ $cmdAPPEND -ne 0 ]] && [ -f ~/.lpc/tmp_append ]; then
+if [[ $cmdAPPEND -ne 0 ]] && [ -f ${Udir}/tmp_append ]; then
 cat ${Udir}/tmp_append >> ~/.linphonec_history
 fi
 exit=0
