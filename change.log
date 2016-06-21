@@ -22,6 +22,14 @@ Status messages are added to inform the user of some actions taken.
 
 0.4.0.1: 16/06/2016- Consecutive duplicate commands are removed from last used before appending to history file 
 
+0.4.0.2: 19/06/2016- Bash completion added as an opt dependency in arch-linux package
+Bugs fixed due to leftover ref to .lpc dir.
+
+0.4.0.3: 20/06/2016- Last refferences to ~/.lpc have been removed. Hopefully lpclic is bug free for now.
+
+0.4.0.4: 20/06/2016- Minor improvements to comments 
+Menus always display in single column list instead of showing in a 3 column grid on first open.
+
 
 ToDo- Finish hist length limit function.
 Improve history cleanup to catch more typos and cases where a command is typed on a line wher a command already exists.

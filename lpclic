@@ -32,11 +32,13 @@ echo '1) LPC-editor
 4) Command-list-length
 5) Start-command
 6) Close-menu
+     (Return to main menu or launch linphone)
 7) Quit'
 }
 
 echo "    *Configuration Menu*"
-SETTINGS='LPC-editor Favorites-to-use Append-last-used Command-list-length Start-command Close-menu Quit'
+COLUMNS="1"
+SETTINGS=('LPC-editor Favorites-to-use Append-last-used Command-list-length Start-command Close-menu Quit')
 PS3='Type a number to select an option...Quit when you are done.
 '
 select SETTING in $SETTINGS
@@ -122,7 +124,7 @@ fi
 done
 }
 
-## Setup and configuration function
+## LPCLIC setup and configuration function: opens main menu
 LPCSET() {
 ## Display options when needed
 SHOWOPT() {
@@ -136,6 +138,7 @@ echo '1) Configure-lpclic
 }
 
 echo "    *Main Menu*"
+COLUMNS="1"
 OPTS='Configure-lpclic Edit-favorite-commands Edit-linphonec_history Launch-Linphone Quit'
 PS3='Type a number to select an option...,Quit when you are done.
 '
