@@ -1,0 +1,30 @@
+#  Completion for linphonec:
+#
+ #  linphonec opt [filename]
+ #
+ _linphonec()
+ {
+     local cur prev opts
+     COMPREPLY=()
+     cur="${COMP_WORDS[COMP_CWORD]}"
+     prev="${COMP_WORDS[COMP_CWORD-1]}"
+     opts="-a -b -c -C -d -D -l -s -S -v --version -V --wid"
+
+     case "${prev}" in
+         -c)
+             COMPREPLY=( $(compgen -f ${cur}) )
+             return 0
+             ;;
+         -l)
+             COMPREPLY=( $(compgen -f ${cur}) )
+             return 0
+             ;;
+
+         *)
+         ;;
+     esac
+
+     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+ }
+ complete -F _linphonec linphonec
+
