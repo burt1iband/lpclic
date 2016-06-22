@@ -11,12 +11,12 @@
      opts="-a -b -c -d -l -s -S -v -V"
 
      case "${prev}" in
-         -c)
+         -b|-c|-l)
              COMPREPLY=( $(compgen -f ${cur}) )
              return 0
              ;;
-         -l)
-             COMPREPLY=( $(compgen -f ${cur}) )
+         -d)
+             COMPREPLY=( $(compgen -W "0 1 2 3 4 5 6" ) )
              return 0
              ;;
 

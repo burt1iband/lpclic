@@ -34,6 +34,7 @@ Menus always display in single column list instead of showing in a 3 column grid
 Probably won't make bash-completions mandatory till a bit more powerful files are shipped.
 
 0.5.0.1: 22/06/2016- Improved completion for linphonec.
+Manpage updated to mention completion functionality.
 
 
 ToDo- Finish hist length limit function.
