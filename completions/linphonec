@@ -8,7 +8,7 @@
      COMPREPLY=()
      cur="${COMP_WORDS[COMP_CWORD]}"
      prev="${COMP_WORDS[COMP_CWORD-1]}"
-     opts="-a -b -c -C -d -D -l -s -S -v --version -V --wid"
+     opts="-a -b -c -d -l -s -S -v -V"
 
      case "${prev}" in
          -c)
@@ -27,4 +27,5 @@
      COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
  }
  complete -F _linphonec linphonec
+
 
