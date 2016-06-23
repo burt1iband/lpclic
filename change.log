@@ -43,6 +43,9 @@ Manpage update will wait for next release.
 The -s option that started linphonec with out processing cmd history has changed to -S so that new option -s can be used to start a call when linphone is 
 launched. This was done to be consistent with the linphonec -s option.  
 
+0.5.0.4: 23/06/2016- Now lpclic -s can complete called numbers sip handles and IPs found in call_hist.
+Manpage updated:
+
 
 ToDo- Finish hist length limit function.
 Improve history cleanup to catch more typos and cases where a command is typed on a line wher a command already exists.
