@@ -36,6 +36,10 @@ Probably won't make bash-completions mandatory till a bit more powerful files ar
 0.5.0.1: 22/06/2016- Improved completion for linphonec.
 Manpage updated to mention completion functionality.
 
+0.5.0.2: 22/06/2016- Linphonec -s now completes dialed numbers, soon will do similar for call command in both linphonec whether or not launched by lpclic 
+or not.
+Manpage update will wait for next release.
+
 
 ToDo- Finish hist length limit function.
 Improve history cleanup to catch more typos and cases where a command is typed on a line wher a command already exists.
