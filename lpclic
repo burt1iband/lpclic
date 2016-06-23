@@ -68,7 +68,7 @@ read -p "Press enter to continue using $dfFAVS as your default favorites file,
 or type the name of the file you want to use.
 " TMPFAVS
 if [[ -n "$TMPFAVS" ]]; then
-sed -i.bak "s/^dfFAVS=.*/dfFAVS=$TMPFAVS/" $Uconf
+sed -i.bak "s,^dfFAVS=.*,dfFAVS=$TMPFAVS," $Uconf
 echo "$TMPFAVS is now your default favorites file."
 SHOWSET
 else
@@ -249,7 +249,7 @@ fi
 ## Read lpc settings 
 READCONF
 
-while getopts :cf:hmps CLO; do
+while getopts :cf:hmps:S CLO; do
 case $CLO in
 c)
 LPCCONF
@@ -271,12 +271,13 @@ h)
 echo 'Typing lpclic opens linphonec   after optimizing its command history.
 
      *Options:
--c   Configure user specific lpclic options
+-c   Configure your lpclic options
 -f   Fileto read configuration from: file must already exist
 -h   Helpful message: this dribble to remind you of available options
 -m   Main menu: includes options to edit commands, lpclic config, etc.
 -p   Process command history with outlaunching linphone
--s   Start linphone using your default command with out preprocessing command history
+-s   Start a call: requires a number, sip handle, or IP
+-S   Start linphone using your default command with out preprocessing command history
 
 Type man lpclic for more information.'
 exit 0
@@ -291,6 +292,10 @@ OPTHIST
 exit 0
 ;;
 s)
+OPTHIST
+exec ${LPEXEC} -s ${2}
+;;
+S)
 exec $LPEXEC
 ;;
 ?)
