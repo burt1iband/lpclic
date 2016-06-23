@@ -1,12 +1,16 @@
 answer
 call
 call echo@iptel.org
+camera off
 conference add
 conference rm
+help soundcard
+param sound mic_gain_db
 pause
 playbackgain-2.5
 quit
 resume
+soundcard show
 terminate
 ============================================================
 ***History Starts Below***
