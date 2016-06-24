@@ -248,8 +248,21 @@ fi
 
 ## Read lpc settings 
 READCONF
+msg1='Typing lpclic opens linphonec   after optimizing its command history.
 
-while getopts :cf:hmps:S CLO; do
+     *Options:
+-c   Configure your lpclic options
+-f   File to read configuration from: file must already exist
+-h   Helpful message: this dribble to remind you of available options
+-H   Helpful message plus some extra tips on linphonec & lpclic use
+-m   Main menu: includes options to edit commands, lpclic config, etc.
+-p   Process command history with outlaunching linphone
+-s   Start a call: requires a number, sip handle, or IP
+-S   Start linphone using your default command with out preprocessing command history
+
+Type man lpclic for more information.'
+
+while getopts :cf:hHmps:S CLO; do
 case $CLO in
 c)
 LPCCONF
@@ -268,18 +281,29 @@ echo " your configuration will be read from $OPTARG"
 fi
 ;;
 h)
-echo 'Typing lpclic opens linphonec   after optimizing its command history.
+echo "$msg1"
+exit 0
+;;
+H)
+echo "$msg1"
+echo '
+     *Tips:
+Type lpclic -s and starttyping any phone number, SIP handle or IP
+in your call history. Press tab to see available options and complete 
+the number or sipID. With lpclic installed you can do this directly in 
+linphonec as well.
 
-     *Options:
--c   Configure your lpclic options
--f   Fileto read configuration from: file must already exist
--h   Helpful message: this dribble to remind you of available options
--m   Main menu: includes options to edit commands, lpclic config, etc.
--p   Process command history with outlaunching linphone
--s   Start a call: requires a number, sip handle, or IP
--S   Start linphone using your default command with out preprocessing command history
+You can view or change any linphone setting from with in the linphone
+interface using the param command.
 
-Type man lpclic for more information.'
+The soundcard command can show you available devices, current configuration
+and let you change those settings.
+
+Examples of these commands are provided in the default lpc_favorites file
+installed with lpclic.
+
+For more info on a specific command type help command in linphonec, e.g.,
+help soundcard. To see a list of lesser known commands type help advanced.'
 exit 0
 ;;
 m)
@@ -292,6 +316,7 @@ OPTHIST
 exit 0
 ;;
 s)
+BKC
 OPTHIST
 exec ${LPEXEC} -s ${2}
 ;;
